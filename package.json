@@ -1,0 +1,23 @@
+{
+  "name": "employee-app",
+  "version": "1.0.0",
+  "description": "employeeapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "employee app new"
+  },
+  "author": "Gowri",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "mongoose": "^8.6.3",
+    "morgan": "^1.10.0",
+    "node": "^22.9.0"
+  }
+}
