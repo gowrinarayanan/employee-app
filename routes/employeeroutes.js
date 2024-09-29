@@ -1,57 +1,138 @@
-const express=require('express');
-const router=express.Router();
-const empModel=require('../model/empdata');
-router.use(express.json())
-//GET operation
-router.get('/',async (req,res)=>{
+const express = require('express');
+const router = express.Router();
+router.use(express.json());
+router.use(express.urlencoded({extended:true}));
+const employeeModel = require('../model/empdata');
+
+
+
+// function employeeroutes(nav){
+//     router.get('/',async(req,res)=>{
+//         try {
+//             res.render("employee",{
+//                 title:'Employee',
+//                 nav
+//             })
+//         } catch (error) {
+//             res.render(error);
+//             // res.status(404).send('Data not found');
+//         }
+//     });
+//     return router;
+// }
+
+function employeeroutes(nav){
+router.get('/',async(req,res)=>{
     try {
-        const data=await empModel.find();
-        res.status(200).send(data);
+        const data = await employeeModel.find();
+        res.status(201).render("employee",{
+            title:'Employee',
+            nav,
+            data,
+           
+            
+        })
+        
     } catch (error) {
+        res.render(error);
         res.status(404).send('Data not found');
     }
+});
 
 
-})
-//POST operation
-router.post('/addData',async(req,res)=>{
+router.get('/employeeAdd',async(req,res)=>{
     try {
-        var item=req.body;
-        const data1=new empModel(item);
-        const saveddata=await data1.save();
-        res.status(200).send('Post successful');
+        // const data = await employeeModel.find();
+        res.status(201).render("employeeAdd",{
+            title:'EmployeeAdd',
+            nav,
+            
+            
+        })
+        
     } catch (error) {
-        res.status(404).send('Post unsuccessful');
+        res.render(error);
+        res.status(404).send('Data not found');
+    }
+});
+
+//for  update
+router.get('/employeeUpdate/:id',async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const data = await employeeModel.findById(id);
+        res.status(201).render("employeeUpdate",{
+            title:'EmployeeAdd',
+            nav,
+            data
+         })
+        console.log(data);
+        
+    } catch (error) {
+        res.render(error);
+        res.status(404).send('Data not found');
+    }
+});
+
+
+//updation
+router.post('/editEmployee/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const updatedEmployee = await employeeModel.findByIdAndUpdate(id, req.body, { new: true });
+        res.redirect('/employees'); // Redirect to the employee list or another page after update
+    } catch (error) {
+        res.status(500).send('Error updating employee details');
+    }
+});
+
+
+
+
+
+
+
+router.post('/addEmployee',async(req,res)=>{
+    try {
+        var item = req.body;
+        const data1 = new employeeModel(item);
+        const saveddata = await data1.save();
+        res.status(200).send('Post Successful');
+
+    } catch (error) {
+      res.status(404).send('Post Unsuccessful');  
     }
 })
-//UPDATE operation
-router.put('/update/:id',async(req,res)=>{
+
+// router.put('/editEmployee/:id',async(req,res)=>{
+//     try {
+//         const id = req.params.id;
+//         const data = await employeeModel.findByIdAndUpdate(id,req.body);
+//         res.status(200).send('Update successful');
+//     } catch (error) {
+//        res.status(404).send(error); 
+//     }
+// })
+
+router.delete('/deleteEmployee/:id',async(req,res)=>{
     try {
-       const id=req.params.id;
-       const data=await empModel.findByIdAndUpdate(id,req.body)
-       res.status(200).send('Updated successfully');
+        const id = req.params.id;
+        const data = await employeeModel.findByIdAndDelete(id);
+        res.status(200).send('Delete successful')
     } catch (error) {
-       res.status(404).send('Update unsuccessful');
+        res.status(404).send('Delete Unsuccessful');
     }
-   })
-//DELETE operation
+})
+
+
+
+return router;
+}
 
 
 
 
 
 
-router.delete('/delete/:id',async(req,res)=>{
-    try {
-       const id=req.params.id;
-       const data=await empModel.findByIdAndDelete(id,req.body)
-       res.status(200).send('Deleted successfully');
-    } catch (error) {
-       res.status(404).send('Delete unsuccessful');
-    }
-   })
-
-
-
-
-module.exports=router
+module.exports=employeeroutes
+// module.exports = router;
