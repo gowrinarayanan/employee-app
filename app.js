@@ -1,14 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const app = new express();
 
 app.use(morgan('dev'));
 app.set('view engine','ejs');
 app.set('views',__dirname+'/views')
 
+
+app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')));
+console.log(__dirname);
 require('dotenv').config()
 const PORT = process.env.PORT
-app.use(express.static('public'))
 
 
 require('./db/connection');
